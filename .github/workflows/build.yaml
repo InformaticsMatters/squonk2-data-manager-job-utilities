@@ -41,8 +41,8 @@ jobs:
     - name: Test
       run: |
         pyroma .
-        pylint decoder
-        mypy decoder --install-types --non-interactive
+        pylint dm_job_utilities
+        mypy dm_job_utilities --install-types --non-interactive
     - name: Build
       run: |
         python setup.py bdist_wheel
