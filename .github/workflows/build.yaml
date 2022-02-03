@@ -38,6 +38,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r build-requirements.txt
+        pip install -r package-requirements.txt
     - name: Test
       run: |
         pyroma .
