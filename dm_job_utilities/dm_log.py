@@ -1,14 +1,16 @@
 """Python utilities for Data Manager Jobs
 """
+from __future__ import print_function
 
-from datetime import datetime, timezone
-import io
+from datetime import datetime
 import logging
 from numbers import Number
 
+import pytz
+import six
 from wrapt import synchronized
 
-_INFO: str = logging.getLevelName(logging.INFO)
+_INFO = logging.getLevelName(logging.INFO)
 
 
 class DmLog:
@@ -16,11 +18,11 @@ class DmLog:
     in the stdout of an application.
     """
 
-    cost_sequence_number: int = 0
-    string_buffer = io.StringIO()
+    cost_sequence_number = 0
+    string_buffer = six.StringIO()
 
     @classmethod
-    def emit_event(cls, *args, **kwargs) -> None:
+    def emit_event(cls, *args, **kwargs):
         """Generate a Data Manager-compliant event message.
         The Data Manager watches stdout and interprets certain formats
         as an 'event'. These are then made available to the client.
@@ -34,22 +36,20 @@ class DmLog:
         # The user message (which may be blank)
         _ = cls.string_buffer.truncate(0)
         print(*args, file=cls.string_buffer)
-        msg: str = cls.string_buffer.getvalue().strip()
+        msg = cls.string_buffer.getvalue().strip()
         if not msg:
             msg = '(blank)'
         # A UTC date/time
-        msg_time = datetime.now(timezone.utc).replace(microsecond=0)
+        msg_time = datetime.now(pytz.utc).replace(microsecond=0)
         # A logging level (INFO by default)
-        level: str = kwargs.get('level', logging.INFO)
+        level = kwargs.get('level', logging.INFO)
         print('%s # %s -EVENT- %s' % (msg_time.isoformat(),
                                       logging.getLevelName(level),
                                       msg))
 
     @classmethod
     @synchronized
-    def emit_cost(cls,
-                  cost: Number,
-                  incremental: bool = False) -> None:
+    def emit_cost(cls, cost, incremental=False):
         """Generate a Data Manager-compliant cost message.
         The Data Manager watches stdout and interprets certain formats
         as a 'cost' lines, and they're typically used for billing purposes.
@@ -72,7 +72,7 @@ class DmLog:
         assert cost_str[0] != '-'
         if incremental:
             cost_str = '+' + cost_str
-        msg_time = datetime.now(timezone.utc).replace(microsecond=0)
+        msg_time = datetime.now(pytz.utc).replace(microsecond=0)
         print('%s # %s -COST- %s %d' % (msg_time.isoformat(),
                                         _INFO,
                                         cost_str,

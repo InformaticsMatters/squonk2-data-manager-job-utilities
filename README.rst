@@ -5,8 +5,8 @@ Informatics Matters Data Manager Job Utilities
    :target: https://badge.fury.io/py/im-data-manager-job-utilities
    :alt: PyPI package (latest)
 
-A package that simplifies the generation of *events* and *cost* lines
-written to the Job's stdout stream.
+A Python 2/3 package that simplifies the generation of *events* and *cost*
+lines written to the Job's stdout stream.
 
 The following utilities are available: -
 
