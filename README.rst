@@ -41,7 +41,16 @@ The final value on each cost line is a unique sequence number. This value
 is typically an integer that increments with each line. It is required and
 is used by the Data Manager to avoid duplicating costs.
 
+The Data Manager uses the `python-dateutil`_ package to parse
+dates and times from the generated log lines. The package is extremely
+tolerant of many formats but if you are in control of the
+string, the preferred format would be to use a classic UTC ISO string like
+``%Y-%m-%dT%H:%M:%S%z`` so that the date and time is written as::
+
+    2022-03-20T10:49:41+00:00
+
 .. _PyPI: https://pypi.org/project/im-data-manager-job-utilities
+.. _python-dateutil: https://pypi.org/project/python-dateutil
 
 Get in touch
 ============
