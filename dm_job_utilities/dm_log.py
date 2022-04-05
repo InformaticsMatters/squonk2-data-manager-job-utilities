@@ -5,12 +5,18 @@ from __future__ import print_function
 from datetime import datetime
 import logging
 from numbers import Number
+import sys
+import time
 
 import pytz
 import six
 from wrapt import synchronized
 
 _INFO = logging.getLevelName(logging.INFO)
+
+# Delay between issuing a fatal message
+# and calling sys.exit(1)
+_FATAL_PRE_EXIT_DELAY_S = 4
 
 
 class DmLog:
@@ -46,6 +52,40 @@ class DmLog:
         print('%s # %s -EVENT- %s' % (msg_time.isoformat(),
                                       logging.getLevelName(level),
                                       msg))
+
+    @classmethod
+    def emit_fatal_event(cls, *args, **kwargs):
+        """Generate a Data Manager-compliant event message and then force
+        an exit of the process by calling sys.exit(). The level used for the
+        event, unless modified by 'level' is the built-in value of CRITICAL.
+
+        There is no return from this function!
+
+        The event is emitted, a short pause is enforced (to ensure logging
+        has sufficient time to execute) and then the process is killed.
+
+        kwargs:
+
+        level - Providing a standard Python log-level, like logging.INFO.
+                Defaults to CRITICAL.
+        """
+        # The user message (which may be blank)
+        _ = cls.string_buffer.truncate(0)
+        print(*args, file=cls.string_buffer)
+        msg = cls.string_buffer.getvalue().strip()
+        if not msg:
+            msg = '(blank)'
+        # A UTC date/time
+        msg_time = datetime.now(pytz.utc).replace(microsecond=0)
+        # A logging level (CRITICAL by default)
+        level = kwargs.get('level', logging.CRITICAL)
+        print('%s # %s -EVENT- %s' % (msg_time.isoformat(),
+                                      logging.getLevelName(level),
+                                      msg))
+        # Pre-exit pause
+        time.sleep(_FATAL_PRE_EXIT_DELAY_S)
+        # Die
+        sys.exit(1)
 
     @classmethod
     @synchronized
