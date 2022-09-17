@@ -24,7 +24,7 @@ setup(
     version=os.environ.get('GITHUB_REF_SLUG', '1.0.0'),
     author='Alan Christie',
     author_email='achristie@informaticsmatters.com',
-    url='https://github.com/informaticsmatters/data-manager-job-utilities',
+    url='https://github.com/informaticsmatters/squonk2-data-manager-job-utilities',
     license='MIT',
     description='Job execution utilities',
     long_description=get_long_description(),

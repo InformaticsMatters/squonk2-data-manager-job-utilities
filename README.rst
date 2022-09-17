@@ -6,7 +6,7 @@ Informatics Matters Data Manager Job Utilities
    :alt: PyPI package (latest)
 
 A Python 2/3 package that simplifies the generation of *events* and *cost*
-lines written to the Job's stdout stream.
+lines written to a **Squonk2 Job** stdout stream.
 
 The following utilities are available: -
 
@@ -57,4 +57,4 @@ Get in touch
 
 - Report bugs, suggest features or view the source code `on GitHub`_.
 
-.. _on GitHub: https://github.com/informaticsmatters/data-manager-job-utilities
+.. _on GitHub: https://github.com/informaticsmatters/squonk2-data-manager-job-utilities
