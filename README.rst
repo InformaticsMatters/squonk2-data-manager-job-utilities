@@ -5,6 +5,14 @@ Informatics Matters Data Manager Job Utilities
    :target: https://badge.fury.io/py/im-data-manager-job-utilities
    :alt: PyPI package (latest)
 
+.. image:: https://github.com/InformaticsMatters/squonk2-data-manager-job-utilities/actions/workflows/build.yaml/badge.svg
+   :target: https://github.com/InformaticsMatters/squonk2-data-manager-job-utilities/actions/workflows/build.yaml
+   :alt: Build
+
+.. image:: https://github.com/InformaticsMatters/squonk2-data-manager-job-utilities/actions/workflows/publish.yaml/badge.svg
+   :target: https://github.com/InformaticsMatters/squonk2-data-manager-job-utilities/actions/workflows/publish.yaml
+   :alt: Publish
+
 A Python 2/3 package that simplifies the generation of *events* and *cost*
 lines written to a **Squonk2 Job** stdout stream.
 
