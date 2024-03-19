@@ -1,2 +1,6 @@
 [messages control]
-disable = consider-using-f-string
+disable =
+    consider-using-f-string,
+    too-many-branches,
+    too-many-locals,
+    too-many-statements

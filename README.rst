@@ -21,6 +21,10 @@ The following utilities are available: -
 - ``DmLog.emit_event()``
 - ``DmLog.emit_cost()``
 
+A number of miscellaneous utilities are also included. These have been
+extracted form the squonk2 virtual-screening ``utils.py`` module and renamed
+and reformatted here into ``misc.py`
+
 Installation (Python)
 =====================
 
