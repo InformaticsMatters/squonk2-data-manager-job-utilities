@@ -3,6 +3,8 @@
 
 # Extracted 19th March 2024
 #
+# Use this new module with "from dm_job_utilities import utils"
+#
 # Includes style changes to align with the pre-existing modules
 # and the following modifications/changes: -
 #
@@ -36,6 +38,10 @@ def expand_path(path) -> None:
 def update_charge_flag_in_atom_block(atom_block) -> str:
     """See https://sourceforge.net/p/rdkit/mailman/message/36425493/
     """
+    # To simply fix the missing END, found during unit testing
+    # we simply add a line-feed to the input if it needs one.
+    if not atom_block.endswith("\n"):
+        atom_block += "\n"
     formatter = "{:>10s}" * 3 + "{:>2}{:>4s}" + "{:>3s}" * 11
     chgs = []  # list of charges
     lines = atom_block.split("\n")

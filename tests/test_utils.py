@@ -2,7 +2,7 @@
 import pathlib
 import unittest
 
-from dm_job_utilities.misc import (
+from dm_job_utilities.utils import (
     calc_geometric_mean,
     is_type,
     read_delimiter,
