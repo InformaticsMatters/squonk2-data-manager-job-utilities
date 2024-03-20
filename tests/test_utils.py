@@ -1,4 +1,3 @@
-
 import pathlib
 import unittest
 
@@ -9,7 +8,7 @@ from dm_job_utilities.utils import (
     update_charge_flag_in_atom_block,
 )
 
-class TestMiscMethods(unittest.TestCase):
+class TestUtilsMethods(unittest.TestCase):
 
     def test_update_charge_flag_in_atom_block(self):
         atom_block_a_in = pathlib.Path('test-data/atom-block-a-in.sdf').read_text()

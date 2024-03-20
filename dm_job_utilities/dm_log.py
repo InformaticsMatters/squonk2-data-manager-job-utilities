@@ -28,6 +28,11 @@ class DmLog:
     string_buffer = six.StringIO()
 
     @classmethod
+    def reset_cost_sequence_number(cls):
+        """Used primarily for testing to reset the sequence  number in COST lines."""
+        cls.cost_sequence_number = 0
+
+    @classmethod
     def emit_event(cls, *args, **kwargs):
         """Generate a Data Manager-compliant event message.
         The Data Manager watches stdout and interprets certain formats
