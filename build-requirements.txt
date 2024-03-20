@@ -1,3 +1,5 @@
 pylint
 pyroma
+pytest
+pytest-cov
 mypy

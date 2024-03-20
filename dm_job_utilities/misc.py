@@ -3,34 +3,23 @@
 
 # Extracted 19th March 2024
 #
-# Includes style changes to align with the pre-existing modules.
+# Includes style changes to align with the pre-existing modules
+# and the following modifications/changes: -
+#
+# 'get_path_from_digest()' has been removed because it is obsolete.
+#
+# 'round_to_significant_number()' has been removed. Its implementation
+# was inaccurate and is easily replaced by round() from the sigfig package.
 
 import os
 import sys
 from math import log10, floor
 from typing import Any, List, Optional, Tuple
 
-DEFAULT_NUM_CHARS = 2
-DEFAULT_NUM_LEVELS = 2
-
 
 def log(*args, **kwargs) -> None:
     """Log output to STDERR"""
     print(*args, file=sys.stderr, **kwargs)
-
-
-def get_path_from_digest(
-    digest, num_chars=DEFAULT_NUM_CHARS, num_levels=DEFAULT_NUM_LEVELS
-) -> List[str]:
-    """Splits a digest string into parts"""
-    parts = []
-    start = 0
-    for _ in range(0, num_levels):
-        end = start + num_chars
-        part = digest[start:end]
-        parts.append(part)
-        start = start + num_chars
-    return parts
 
 
 def expand_path(path) -> None:
@@ -175,15 +164,11 @@ def calc_geometric_mean(scores: List[float]) -> float:
     return total ** (1.0 / len(scores))
 
 
-def round_to_significant_number(val: float, sig: int) -> float:
-    """Round the value to the specified number of significant numbers
-    """
-    return round(val, sig - int(floor(log10(abs(val)))) - 1)
-
-
 def is_type(value, typ) -> Tuple[int, Any]:
     """Returns a tuple of the form (status, value) where status is
-    -1 if the value is not of the given type, and 0 if it is."""
+    -1 if the value cannot be of the given type, and 0 if it is. The value
+    returned is cast to the given type on success.
+    """
     if value is None:
         return 0, value
     try:

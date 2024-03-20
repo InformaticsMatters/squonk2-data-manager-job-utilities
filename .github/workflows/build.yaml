@@ -49,6 +49,7 @@ jobs:
         pip install -r package-requirements.txt
     - name: Test
       run: |
+        pytest
         pyroma .
         pylint dm_job_utilities
         mypy dm_job_utilities --install-types --non-interactive
