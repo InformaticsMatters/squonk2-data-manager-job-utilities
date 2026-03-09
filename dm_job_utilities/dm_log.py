@@ -1,10 +1,12 @@
 """Python utilities for Data Manager Jobs
 """
+
 from __future__ import print_function
 
 from datetime import datetime
 import logging
 from numbers import Number
+import os
 import sys
 import time
 
@@ -13,6 +15,10 @@ import six
 from wrapt import synchronized
 
 _INFO = logging.getLevelName(logging.INFO)
+
+# Control variables to disable some methods...
+_COST_DISABLE: bool = os.environ.get('DMLOG_COST_DISABLE') is not None
+_EVENT_DISABLE: bool = os.environ.get('DMLOG_EVENT_DISABLE') is not None
 
 # Delay between issuing a fatal message
 # and calling sys.exit(1)
@@ -44,6 +50,9 @@ class DmLog:
         level - Providing a standard Python log-level, like logging.INFO.
                 Defaults to INFO.
         """
+        if _EVENT_DISABLE:
+            return
+
         # The user message (which may be blank)
         _ = cls.string_buffer.truncate(0)
         print(*args, file=cls.string_buffer)
@@ -74,6 +83,9 @@ class DmLog:
         level - Providing a standard Python log-level, like logging.INFO.
                 Defaults to CRITICAL.
         """
+        if _EVENT_DISABLE:
+            return
+
         # The user message (which may be blank)
         _ = cls.string_buffer.truncate(0)
         print(*args, file=cls.string_buffer)
@@ -109,6 +121,9 @@ class DmLog:
         """
         # Cost is always expected to be a number that's not negative.
         assert isinstance(cost, Number)
+
+        if _COST_DISABLE:
+            return
 
         # Ensure this cost message is unique?
         cls.cost_sequence_number += 1

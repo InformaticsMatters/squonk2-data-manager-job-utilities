@@ -61,6 +61,16 @@ string, the preferred format would be to use a classic UTC ISO string like
 
     2022-03-20T10:49:41+00:00
 
+Disabling logging
+-----------------
+
+You can dynamically disable the event and cost logging by defining the following
+environment variables (any value will do, the presence of the variable is enough
+to disable the corresponding facility)::
+
+    DMLOG_EVENT_DISABLE
+    DMLOG_COST_DISABLE
+
 .. _PyPI: https://pypi.org/project/im-data-manager-job-utilities
 .. _python-dateutil: https://pypi.org/project/python-dateutil
 
