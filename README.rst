@@ -64,7 +64,7 @@ string, the preferred format would be to use a classic UTC ISO string like
 Disabling logging
 -----------------
 
-You can dynamically disable the event and cost logging by defining the following
+You can disable the event and cost logging by defining the following
 environment variables (any value will do, the presence of the variable is enough
 to disable the corresponding facility)::
 
