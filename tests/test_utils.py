@@ -1,3 +1,4 @@
+import io
 import pathlib
 import unittest
 
@@ -6,6 +7,7 @@ from dm_job_utilities.utils import (
     is_type,
     read_delimiter,
     update_charge_flag_in_atom_block,
+    write_row,
 )
 
 class TestUtilsMethods(unittest.TestCase):
@@ -36,3 +38,13 @@ class TestUtilsMethods(unittest.TestCase):
         self.assertEqual(is_type(1, str), (1, '1'))
         self.assertEqual(is_type("1", float), (1, 1.0))
         self.assertEqual(is_type(1.0, int), (1, 1))
+
+    def test_write_row(self):
+        out = io.StringIO()
+        write_row(["a", "b,c", 1, 2.5], ",", out)
+        self.assertEqual(out.getvalue(), 'a,"b,c",1,2.5\n')
+
+    def test_write_row_with_no_embedded_delimiter(self):
+        out = io.StringIO()
+        write_row(["a", "b", "c"], "\t", out)
+        self.assertEqual(out.getvalue(), "a\tb\tc\n")

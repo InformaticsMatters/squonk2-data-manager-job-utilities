@@ -25,6 +25,33 @@ A number of miscellaneous utilities are also included. These have been
 extracted form the squonk2 virtual-screening ``utils.py`` module and moved
 here into ``utils.py``.
 
+Two functions from the original ``utils.py`` are intentionally **not**
+present here:
+
+- ``get_path_from_digest()`` is obsolete and has been dropped.
+- ``round_to_significant_number()`` has been dropped; its implementation was
+  inaccurate and is easily replaced by ``round()`` from the `sigfig`_ package.
+
+Consumers that still carry local copies of these two functions should not
+expect to find them here.
+
+``dm_job_utilities.cli`` also provides command-line helpers shared by the Job
+scripts:
+
+- ``add_common_io_args(parser)`` adds the "Input/output options" argument
+  group (``-i/--input``, ``-o/--output``, ``-d/--delimiter``, ``--id-column``,
+  ``--mol-column``, ``--y-column``, ``--read-header``, ``--write-header``,
+  ``--read-records``, ``--interval`` and ``--omit-fields``) that's re-typed
+  across several Job scripts.
+- ``str_or_int()`` is an argparse type for column specifiers that may be
+  given as a zero-based index or as a field name.
+- ``ProgressReporter`` wraps the interval-based
+  ``DmLog.emit_event("Processed N records")`` / trailing
+  ``DmLog.emit_cost(N)`` idiom used when processing large record sets.
+
+``utils.write_row(row, delimiter, out)`` writes a delimited row to a stream,
+quoting any field that itself contains the delimiter.
+
 Installation (Python)
 =====================
 
@@ -73,6 +100,7 @@ to disable the corresponding facility)::
 
 .. _PyPI: https://pypi.org/project/im-data-manager-job-utilities
 .. _python-dateutil: https://pypi.org/project/python-dateutil
+.. _sigfig: https://pypi.org/project/sigfig
 
 Get in touch
 ============
