@@ -38,16 +38,30 @@ expect to find them here.
 ``dm_job_utilities.cli`` also provides command-line helpers shared by the Job
 scripts:
 
-- ``add_common_io_args(parser)`` adds the "Input/output options" argument
-  group (``-i/--input``, ``-o/--output``, ``-d/--delimiter``, ``--id-column``,
-  ``--mol-column``, ``--y-column``, ``--read-header``, ``--write-header``,
-  ``--read-records``, ``--interval`` and ``--omit-fields``) that's re-typed
-  across several Job scripts.
-- ``str_or_int()`` is an argparse type for column specifiers that may be
-  given as a zero-based index or as a field name.
+- ``add_reporting_args(parser)`` adds the "Reporting options" argument group
+  (``--interval``) and returns the group. The interval defaults to ``None`` —
+  no progress events unless the Job is run with ``--interval`` — matching the
+  behaviour of most Jobs today; pass ``interval_default`` for Jobs that should
+  report by default.
 - ``ProgressReporter`` wraps the interval-based
   ``DmLog.emit_event("Processed N records")`` / trailing
-  ``DmLog.emit_cost(N)`` idiom used when processing large record sets.
+  ``DmLog.emit_cost(N)`` idiom used when processing large record sets. It pairs
+  with ``add_reporting_args()``::
+
+      parser = argparse.ArgumentParser()
+      add_reporting_args(parser)
+      args = parser.parse_args()
+
+      reporter = ProgressReporter(args.interval)
+      for count, record in enumerate(records, start=1):
+          ...
+          reporter.report(count)
+      reporter.report_final(count)
+
+The molecule "Input/output options" group is **not** here. It lives in
+`im-rdkit-utilities`_ as ``rdkit_utils.add_common_molecule_io_args()``, beside
+the readers and writers its options feed, along with the ``str_or_int``
+argparse type for column specifiers.
 
 ``utils.write_row(row, delimiter, out)`` writes a delimited row to a stream,
 quoting any field that itself contains the delimiter.
@@ -99,6 +113,7 @@ to disable the corresponding facility)::
     DMLOG_COST_DISABLE
 
 .. _PyPI: https://pypi.org/project/im-data-manager-job-utilities
+.. _im-rdkit-utilities: https://pypi.org/project/im-rdkit-utilities
 .. _python-dateutil: https://pypi.org/project/python-dateutil
 .. _sigfig: https://pypi.org/project/sigfig
 

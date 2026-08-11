@@ -2,76 +2,49 @@ import argparse
 import unittest
 from unittest import mock
 
-from dm_job_utilities.cli import ProgressReporter, add_common_io_args, str_or_int
+from dm_job_utilities.cli import ProgressReporter, add_reporting_args
 
 
-class TestStrOrInt(unittest.TestCase):
+class TestAddReportingArgs(unittest.TestCase):
 
-    def test_int_like_value_returns_int(self):
-        result = str_or_int("3")
-        self.assertEqual(result, 3)
-        self.assertIsInstance(result, int)
-
-    def test_non_int_value_returns_original_string(self):
-        self.assertEqual(str_or_int("SMILES"), "SMILES")
-
-
-class TestAddCommonIoArgs(unittest.TestCase):
-
-    def test_parses_expected_namespace(self):
+    def test_parses_interval(self):
         parser = argparse.ArgumentParser()
-        add_common_io_args(parser)
-        args = parser.parse_args(
-            [
-                "-i", "input.smi",
-                "-o", "output.smi",
-                "-d", "tab",
-                "--id-column", "0",
-                "--mol-column", "SMILES",
-                "--y-column", "2",
-                "--read-header",
-                "--write-header",
-                "--read-records", "50",
-                "--interval", "500",
-                "--omit-fields",
-            ]
-        )
-        self.assertEqual(args.input, "input.smi")
-        self.assertEqual(args.output, "output.smi")
-        self.assertEqual(args.delimiter, "tab")
-        self.assertEqual(args.id_column, 0)
-        self.assertEqual(args.mol_column, "SMILES")
-        self.assertEqual(args.y_column, 2)
-        self.assertTrue(args.read_header)
-        self.assertTrue(args.write_header)
-        self.assertEqual(args.read_records, 50)
+        add_reporting_args(parser)
+        args = parser.parse_args(["--interval", "500"])
         self.assertEqual(args.interval, 500)
-        self.assertTrue(args.omit_fields)
 
-    def test_infile_is_an_alias_for_input(self):
+    def test_interval_defaults_to_none(self):
+        # None means "no progress events unless asked for", which is what most
+        # Jobs do today - no Job manifest passes --interval.
         parser = argparse.ArgumentParser()
-        add_common_io_args(parser)
-        args = parser.parse_args(["--infile", "input.smi"])
-        self.assertEqual(args.input, "input.smi")
+        add_reporting_args(parser)
+        args = parser.parse_args([])
+        self.assertIsNone(args.interval)
 
-    def test_defaults(self):
+    def test_interval_default_can_be_set(self):
         parser = argparse.ArgumentParser()
-        add_common_io_args(parser, output_default="out.smi")
-        args = parser.parse_args(["-i", "in.smi"])
-        self.assertEqual(args.output, "out.smi")
-        self.assertIsNone(args.delimiter)
-        self.assertIsNone(args.id_column)
-        self.assertFalse(args.read_header)
-        self.assertFalse(args.write_header)
-        self.assertEqual(args.read_records, 100)
+        add_reporting_args(parser, interval_default=1000)
+        args = parser.parse_args([])
         self.assertEqual(args.interval, 1000)
-        self.assertFalse(args.omit_fields)
 
-    def test_input_is_required(self):
+    def test_explicit_interval_overrides_the_default(self):
         parser = argparse.ArgumentParser()
-        add_common_io_args(parser)
-        with self.assertRaises(SystemExit):
-            parser.parse_args([])
+        add_reporting_args(parser, interval_default=1000)
+        args = parser.parse_args(["--interval", "25"])
+        self.assertEqual(args.interval, 25)
+
+    def test_returns_the_group_for_further_options(self):
+        parser = argparse.ArgumentParser()
+        group = add_reporting_args(parser)
+        group.add_argument("--extra")
+        args = parser.parse_args(["--extra", "value"])
+        self.assertEqual(args.extra, "value")
+
+    def test_namespace_feeds_the_reporter(self):
+        parser = argparse.ArgumentParser()
+        add_reporting_args(parser)
+        args = parser.parse_args(["--interval", "10"])
+        self.assertEqual(ProgressReporter(args.interval).interval, 10)
 
 
 class TestProgressReporter(unittest.TestCase):
