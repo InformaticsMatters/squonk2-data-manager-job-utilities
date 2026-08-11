@@ -25,6 +25,47 @@ A number of miscellaneous utilities are also included. These have been
 extracted form the squonk2 virtual-screening ``utils.py`` module and moved
 here into ``utils.py``.
 
+Two functions from the original ``utils.py`` are intentionally **not**
+present here:
+
+- ``get_path_from_digest()`` is obsolete and has been dropped.
+- ``round_to_significant_number()`` has been dropped; its implementation was
+  inaccurate and is easily replaced by ``round()`` from the `sigfig`_ package.
+
+Consumers that still carry local copies of these two functions should not
+expect to find them here.
+
+``dm_job_utilities.cli`` also provides command-line helpers shared by the Job
+scripts:
+
+- ``add_reporting_args(parser)`` adds the "Reporting options" argument group
+  (``--interval``) and returns the group. The interval defaults to ``None`` —
+  no progress events unless the Job is run with ``--interval`` — matching the
+  behaviour of most Jobs today; pass ``interval_default`` for Jobs that should
+  report by default.
+- ``ProgressReporter`` wraps the interval-based
+  ``DmLog.emit_event("Processed N records")`` / trailing
+  ``DmLog.emit_cost(N)`` idiom used when processing large record sets. It pairs
+  with ``add_reporting_args()``::
+
+      parser = argparse.ArgumentParser()
+      add_reporting_args(parser)
+      args = parser.parse_args()
+
+      reporter = ProgressReporter(args.interval)
+      for count, record in enumerate(records, start=1):
+          ...
+          reporter.report(count)
+      reporter.report_final(count)
+
+The molecule "Input/output options" group is **not** here. It lives in
+`im-rdkit-utilities`_ as ``rdkit_utils.add_common_molecule_io_args()``, beside
+the readers and writers its options feed, along with the ``str_or_int``
+argparse type for column specifiers.
+
+``utils.write_row(row, delimiter, out)`` writes a delimited row to a stream,
+quoting any field that itself contains the delimiter.
+
 Installation (Python)
 =====================
 
@@ -72,7 +113,9 @@ to disable the corresponding facility)::
     DMLOG_COST_DISABLE
 
 .. _PyPI: https://pypi.org/project/im-data-manager-job-utilities
+.. _im-rdkit-utilities: https://pypi.org/project/im-rdkit-utilities
 .. _python-dateutil: https://pypi.org/project/python-dateutil
+.. _sigfig: https://pypi.org/project/sigfig
 
 Get in touch
 ============

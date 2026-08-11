@@ -15,7 +15,7 @@
 
 import os
 import sys
-from typing import Any, List, Optional, Tuple
+from typing import Any, Iterable, List, Optional, TextIO, Tuple
 
 
 def log(*args, **kwargs) -> None:
@@ -167,6 +167,20 @@ def calc_geometric_mean(scores: List[float]) -> float:
     for score in scores:
         total = total * score
     return total ** (1.0 / len(scores))
+
+
+def write_row(row: Iterable[Any], delimiter: str, out: TextIO) -> None:
+    """Write a delimited row to the given stream, quoting any string field
+    that itself contains the delimiter.
+    """
+    for index, item in enumerate(row):
+        if index > 0:
+            out.write(delimiter)
+        if isinstance(item, str) and delimiter in item:
+            out.write(f'"{item}"')
+        else:
+            out.write(str(item))
+    out.write("\n")
 
 
 def is_type(value, typ) -> Tuple[int, Any]:
