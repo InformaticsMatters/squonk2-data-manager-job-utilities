@@ -37,6 +37,8 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
+        # The floor of the tested matrix in build.yaml, so the published wheel
+        # is built on the oldest Python this package claims to support.
         python-version: '3.11'
     - name: Install dependencies
       run: |
