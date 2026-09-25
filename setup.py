@@ -42,13 +42,18 @@ setup(
         'Environment :: Other Environment',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Operating System :: POSIX :: Linux',
     ],
 
     install_requires=requirements,
+
+    # Declared, so that pip refuses an unsupported Python rather than
+    # installing and failing later. Matches the CI matrix above it.
+    python_requires='>=3.11',
 
     zip_safe=False,
 
